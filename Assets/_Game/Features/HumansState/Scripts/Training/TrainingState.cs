@@ -44,11 +44,13 @@ public class TrainingState : HumanState
 
     private void FinishTraining(HumanView humanView)
     {
-        int healthGain = (int)_upgradeManager.GetCurrentValue(UpgradeStatKey.HumanHealth);
-        int damageGain = (int)_upgradeManager.GetCurrentValue(UpgradeStatKey.HumanDamage);
+        const int baseHealthGain = 10;
+        const int baseDamageGain = 10;
 
-        Debug.Log(healthGain + "," + damageGain);
-        humanView.ApplyTrainingResult(healthGain, damageGain);
+        int healthBonus = (int)_upgradeManager.GetCurrentValue(UpgradeStatKey.HumanHealth);
+        int damageBonus = (int)_upgradeManager.GetCurrentValue(UpgradeStatKey.HumanDamage);
+
+        humanView.ApplyTrainingResult(baseHealthGain + healthBonus, baseDamageGain + damageBonus);
 
         _isFree = true;
         humanStateController.TransitionTo<CombatState>(humanView);
