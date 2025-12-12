@@ -22,7 +22,7 @@ public sealed class UpgradePresenter : IDisposable
         _view.UpgradeClicked -= OnUpgradeClicked;
     }
 
-    private void OnUpgradeClicked(UpgradeStatKey key)
+    private void OnUpgradeClicked(UpgradeType key)
     {
         if (_upgradeManager.TryUpgrade(key))
             RefreshAll();
@@ -30,7 +30,7 @@ public sealed class UpgradePresenter : IDisposable
 
     private void RefreshAll()
     {
-        IReadOnlyList<UpgradeStatKey> keys = _upgradeManager.Keys;
+        IReadOnlyList<UpgradeType> keys = _upgradeManager.Keys;
 
         for (int i = 0; i < keys.Count; i++)
         {

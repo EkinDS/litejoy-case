@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c66541b50d467034ea769f0ea9cdf46e, type: 3}
-  m_Name: HumanDamageData
+  m_Name: AdditionalHumanHealthUpgradeData
   m_EditorClassIdentifier: 
-  statKey: 2
+  statKey: 0
   levels:
-  - cost: 10
+  - cost: 40
     value: 20
-  - cost: 20
+  - cost: 50
     value: 25
-  - cost: 30
+  - cost: 60
     value: 30

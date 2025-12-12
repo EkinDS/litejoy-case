@@ -5,11 +5,11 @@ using UnityEngine;
 
 public sealed class UpgradeManager
 {
-    private readonly Dictionary<UpgradeStatKey, UpgradeDataSO> _dataByKey = new();
-    private readonly Dictionary<UpgradeStatKey, int> _levelByKey = new();
-    private readonly List<UpgradeStatKey> _keys = new();
+    private readonly Dictionary<UpgradeType, UpgradeDataSO> _dataByKey = new();
+    private readonly Dictionary<UpgradeType, int> _levelByKey = new();
+    private readonly List<UpgradeType> _keys = new();
 
-    public IReadOnlyList<UpgradeStatKey> Keys => _keys;
+    public IReadOnlyList<UpgradeType> Keys => _keys;
 
     public UpgradeManager(IReadOnlyList<UpgradeDataSO> upgradeData)
     {
@@ -20,30 +20,30 @@ public sealed class UpgradeManager
             var data = upgradeData[i];
             if (data == null) continue;
 
-            _dataByKey[data.statKey] = data;
+            _dataByKey[data.type] = data;
 
-            if (!_levelByKey.ContainsKey(data.statKey))
-                _levelByKey[data.statKey] = 0;
+            if (!_levelByKey.ContainsKey(data.type))
+                _levelByKey[data.type] = 0;
 
-            if (!_keys.Contains(data.statKey))
-                _keys.Add(data.statKey);
+            if (!_keys.Contains(data.type))
+                _keys.Add(data.type);
         }
         
     }
 
-    public bool HasUpgrade(UpgradeStatKey key) => _dataByKey.ContainsKey(key);
+    public bool HasUpgrade(UpgradeType key) => _dataByKey.ContainsKey(key);
 
-    public int GetCurrentLevel(UpgradeStatKey key)
+    public int GetCurrentLevel(UpgradeType key)
     {
         return _levelByKey.TryGetValue(key, out var lvl) ? lvl : 0;
     }
 
-    public int GetMaxLevel(UpgradeStatKey key)
+    public int GetMaxLevel(UpgradeType key)
     {
         return _dataByKey.TryGetValue(key, out var data) ? data.MaxLevel : 0;
     }
 
-    public float GetCurrentValue(UpgradeStatKey key)
+    public float GetCurrentValue(UpgradeType key)
     {
         if (!_dataByKey.TryGetValue(key, out var data))
             return 0f;
@@ -56,7 +56,7 @@ public sealed class UpgradeManager
         return levelData == null ? 0f : levelData.value;
     }
 
-    public int GetNextCost(UpgradeStatKey key)
+    public int GetNextCost(UpgradeType key)
     {
         if (!_dataByKey.TryGetValue(key, out var data))
             return -1;
@@ -66,7 +66,7 @@ public sealed class UpgradeManager
         return levelData == null ? -1 : levelData.cost;
     }
 
-    public float GetNextValue(UpgradeStatKey key)
+    public float GetNextValue(UpgradeType key)
     {
         if (!_dataByKey.TryGetValue(key, out var data))
             return 0f;
@@ -76,13 +76,13 @@ public sealed class UpgradeManager
         return levelData == null ? 0f : levelData.value;
     }
 
-    public bool CanUpgrade(UpgradeStatKey key)
+    public bool CanUpgrade(UpgradeType key)
     {
         var cost = GetNextCost(key);
         return cost >= 0 && Wallet.GetCoins() >= cost;
     }
 
-    public bool TryUpgrade(UpgradeStatKey key)
+    public bool TryUpgrade(UpgradeType key)
     {
         if (!_dataByKey.TryGetValue(key, out var data))
             return false;

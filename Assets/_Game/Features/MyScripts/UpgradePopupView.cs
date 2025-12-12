@@ -9,7 +9,7 @@ public class UpgradePopupView : MonoBehaviour
     [Serializable]
     private class UpgradeEntryUI
     {
-        public UpgradeStatKey key;
+        public UpgradeType key;
         public Button button;
         public TMP_Text levelText;
         public TMP_Text valueText;
@@ -18,7 +18,7 @@ public class UpgradePopupView : MonoBehaviour
 
     [SerializeField] private List<UpgradeEntryUI> entries = new();
 
-    public event Action<UpgradeStatKey> UpgradeClicked;
+    public event Action<UpgradeType> UpgradeClicked;
 
     private void Awake()
     {
@@ -30,7 +30,7 @@ public class UpgradePopupView : MonoBehaviour
         }
     }
 
-    public void ShowKeys(IReadOnlyList<UpgradeStatKey> keysToShow)
+    public void ShowKeys(IReadOnlyList<UpgradeType> keysToShow)
     {
         for (int i = 0; i < entries.Count; i++)
             entries[i].button.gameObject.SetActive(false);
@@ -43,7 +43,7 @@ public class UpgradePopupView : MonoBehaviour
         }
     }
 
-    public void SetEntry(UpgradeStatKey key, int level, float value, int nextCost)
+    public void SetEntry(UpgradeType key, int level, float value, int nextCost)
     {
         var entry = FindEntry(key);
         if (entry == null) return;
@@ -54,7 +54,7 @@ public class UpgradePopupView : MonoBehaviour
         entry.button.interactable = nextCost >= 0;
     }
 
-    private UpgradeEntryUI FindEntry(UpgradeStatKey key)
+    private UpgradeEntryUI FindEntry(UpgradeType key)
     {
         for (int i = 0; i < entries.Count; i++)
             if (entries[i].key == key) return entries[i];

@@ -33,7 +33,7 @@ public class TrainingState : HumanState
     private void StartTraining(HumanView humanView)
     {
         float trainingTime =
-            _upgradeManager.GetCurrentValue(UpgradeStatKey.TrainingTime);
+            _upgradeManager.GetCurrentValue(UpgradeType.LessHumanTrainingTime);
 
         if (trainingTime <= 0)
             trainingTime = 1f;
@@ -47,8 +47,8 @@ public class TrainingState : HumanState
         const int baseHealthGain = 10;
         const int baseDamageGain = 10;
 
-        int healthBonus = (int)_upgradeManager.GetCurrentValue(UpgradeStatKey.HumanHealth);
-        int damageBonus = (int)_upgradeManager.GetCurrentValue(UpgradeStatKey.HumanDamage);
+        int healthBonus = (int)_upgradeManager.GetCurrentValue(UpgradeType.AdditionalHumanHealth);
+        int damageBonus = (int)_upgradeManager.GetCurrentValue(UpgradeType.AdditionalHumanDamage);
 
         humanView.ApplyTrainingResult(baseHealthGain + healthBonus, baseDamageGain + damageBonus);
 
