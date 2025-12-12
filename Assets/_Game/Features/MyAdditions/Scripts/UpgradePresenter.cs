@@ -14,7 +14,7 @@ public sealed class UpgradePresenter : IDisposable
         _view.UpgradeClicked += OnUpgradeClicked;
         _view.Setup(_upgradeManager.Keys);
 
-        //Wallet.CoinsChanged += RefreshAll;
+        Wallet.CoinsChanged += RefreshAll;
 
         RefreshAll();
     }
@@ -22,7 +22,7 @@ public sealed class UpgradePresenter : IDisposable
     public void Dispose()
     {
         _view.UpgradeClicked -= OnUpgradeClicked;
-        //Wallet.CoinsChanged -= RefreshAll;
+        Wallet.CoinsChanged -= RefreshAll;
     }
 
     private void OnUpgradeClicked(UpgradeType key)
@@ -42,7 +42,7 @@ public sealed class UpgradePresenter : IDisposable
             int currentLevel = _upgradeManager.GetCurrentLevel(key);
             int nextCost = _upgradeManager.GetNextCost(key);
 
-            var model = new UpgradeViewModel(
+            var vm = new UpgradeViewModel(
                 key,
                 currentLevel,
                 nextCost < 0 ? currentLevel : currentLevel + 1,
@@ -52,7 +52,7 @@ public sealed class UpgradePresenter : IDisposable
                 _upgradeManager.CanUpgrade(key)
             );
 
-            _view.Render(model);
+            _view.Render(vm);
         }
     }
 }

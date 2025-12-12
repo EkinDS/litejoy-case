@@ -41,7 +41,7 @@ public class UpgradeButtonView : MonoBehaviour
         levelText.text = $"Lv {viewModel.CurrentLevel + 1}";
         valueText.text = $"{viewModel.CurrentValue} → {viewModel.NextValue}";
         costText.text = $"Cost: {viewModel.NextCost}";
-        SetInteractable(true);
+        SetInteractable(viewModel.CanUpgrade);
     }
 
     public void SetVisible(bool visible)
