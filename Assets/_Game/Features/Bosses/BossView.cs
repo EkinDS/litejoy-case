@@ -17,7 +17,7 @@ namespace _Game.Features.Bosses
 
         public bool IsAlive() => _model.IsAlive;
 
-        public void Initialize(double hp, float attackInterval, int targetsPerAttack, double damage)
+        public void Initialize(int hp, float attackInterval, int targetsPerAttack, int damage)
         {
             _model.Defeated -= OnDefeated;
             _model.Defeated += OnDefeated;
@@ -41,7 +41,7 @@ namespace _Game.Features.Bosses
             });
         }
 
-        public void TakeDamage(double damage)
+        public void TakeDamage(int damage)
         {
             _model.TakeDamage(damage);
         }
@@ -51,7 +51,7 @@ namespace _Game.Features.Bosses
             _model.RegisterAttacker(humanView);
         }
 
-        private void OnHealthChanged(float current, float max)
+        private void OnHealthChanged(int current, int max)
         {
             if (healthBarView != null)
                 healthBarView.SetValues(current, max);

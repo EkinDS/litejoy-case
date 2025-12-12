@@ -8,14 +8,8 @@ public sealed class UpgradeViewModel
     public int NextCost { get; }
     public bool CanUpgrade { get; }
 
-    public UpgradeViewModel(
-        UpgradeType type,
-        int currentLevel,
-        int nextLevel,
-        float currentValue,
-        float nextValue,
-        int nextCost,
-        bool canUpgrade)
+    public UpgradeViewModel(UpgradeType type, int currentLevel, int nextLevel, float currentValue, float nextValue,
+        int nextCost, bool canUpgrade)
     {
         Type = type;
         CurrentLevel = currentLevel;

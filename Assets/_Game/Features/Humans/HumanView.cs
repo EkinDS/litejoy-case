@@ -97,7 +97,7 @@ namespace _Game.Features.Humans
             _model.TakeDamage(damage);
         }
 
-        private void OnHealthChanged(float current, float max)
+        private void OnHealthChanged(int current, int max)
         {
             if (healthBarView != null)
                 healthBarView.SetValues(current, max);

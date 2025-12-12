@@ -46,7 +46,9 @@ public class UpgradeView : MonoBehaviour
     public void Setup(IReadOnlyList<UpgradeType> keysToShow)
     {
         foreach (var b in buttons)
+        {
             b.SetVisible(false);
+        }
 
         foreach (var k in keysToShow)
         {
@@ -72,7 +74,9 @@ public class UpgradeView : MonoBehaviour
         foreach (var btn in buttons)
         {
             if (btn.key.Equals(key))
+            {
                 return btn;
+            }
         }
 
         return null;

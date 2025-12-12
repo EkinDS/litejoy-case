@@ -14,18 +14,24 @@ public sealed class UpgradeModel
     {
         if (upgradeData == null) throw new ArgumentNullException(nameof(upgradeData));
 
-        for (int i = 0; i < upgradeData.Count; i++)
+        foreach (var data in upgradeData)
         {
-            var data = upgradeData[i];
-            if (data == null) continue;
+            if (data == null)
+            {
+                continue;
+            }
 
             _dataByKey[data.type] = data;
 
             if (!_levels.ContainsKey(data.type))
+            {
                 _levels[data.type] = 0;
+            }
 
             if (!_keys.Contains(data.type))
+            {
                 _keys.Add(data.type);
+            }
         }
     }
 
@@ -33,18 +39,27 @@ public sealed class UpgradeModel
 
     public float GetCurrentValue(UpgradeType key)
     {
-        if (!_dataByKey.TryGetValue(key, out var data)) return 0f;
+        if (!_dataByKey.TryGetValue(key, out var data))
+        {
+            return 0F;
+        }
 
         int lvl = GetLevel(key);
-        if (lvl <= 0) return 0f;
+        if (lvl <= 0F)
+        {
+            return 0F;
+        }
 
         var ld = data.GetLevelData(lvl);
-        return ld == null ? 0f : ld.value;
+        return ld == null ? 0F : ld.value;
     }
 
     public int GetNextCost(UpgradeType key)
     {
-        if (!_dataByKey.TryGetValue(key, out var data)) return -1;
+        if (!_dataByKey.TryGetValue(key, out var data))
+        {
+            return -1;
+        }
 
         int nextLvl = GetLevel(key) + 1;
         var ld = data.GetLevelData(nextLvl);
@@ -53,11 +68,14 @@ public sealed class UpgradeModel
 
     public float GetNextValue(UpgradeType key)
     {
-        if (!_dataByKey.TryGetValue(key, out var data)) return 0f;
+        if (!_dataByKey.TryGetValue(key, out var data))
+        {
+            return 0F;
+        }
 
         int nextLvl = GetLevel(key) + 1;
         var ld = data.GetLevelData(nextLvl);
-        return ld == null ? 0f : ld.value;
+        return ld == null ? 0F : ld.value;
     }
 
     public bool CanUpgrade(UpgradeType key)
@@ -68,13 +86,22 @@ public sealed class UpgradeModel
 
     public bool TryUpgrade(UpgradeType key)
     {
-        if (!_dataByKey.TryGetValue(key, out var data)) return false;
+        if (!_dataByKey.TryGetValue(key, out var data))
+        {
+            return false;
+        }
 
         int lvl = GetLevel(key);
-        if (lvl >= data.MaxLevel) return false;
+        if (lvl >= data.MaxLevel)
+        {
+            return false;
+        }
 
         int cost = GetNextCost(key);
-        if (cost < 0 || Wallet.GetCoins() < cost) return false;
+        if (cost < 0 || Wallet.GetCoins() < cost)
+        {
+            return false;
+        }
 
         Wallet.AddCoins(-cost);
         _levels[key] = lvl + 1;

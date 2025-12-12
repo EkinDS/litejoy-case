@@ -31,14 +31,14 @@ public class UpgradeButtonView : MonoBehaviour
 
         if (viewModel.NextCost < 0)
         {
-            levelText.text = $"Lv {viewModel.CurrentLevel + 1}";
+            levelText.text = $"Level {viewModel.CurrentLevel + 1}";
             valueText.text = $"{viewModel.CurrentValue}";
             costText.text = "MAX";
             SetInteractable(false);
             return;
         }
 
-        levelText.text = $"Lv {viewModel.CurrentLevel + 1}";
+        levelText.text = $"Level {viewModel.CurrentLevel + 1}";
         valueText.text = $"{viewModel.CurrentValue} → {viewModel.NextValue}";
         costText.text = $"Cost: {viewModel.NextCost}";
         SetInteractable(viewModel.CanUpgrade);

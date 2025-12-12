@@ -4,15 +4,13 @@ namespace _Game.Features.Humans
 {
     public sealed class HumanModel
     {
-        public event Action<float, float> HealthChanged; // current, max
+        public event Action<int, int> HealthChanged;
         public event Action Died;
 
         private int _health;
         private int _maxHealth;
         private int _damage;
 
-        public int Health => _health;
-        public int MaxHealth => _maxHealth;
         public int Damage => _damage;
 
         public bool IsDead => _health <= 0;

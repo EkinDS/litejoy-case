@@ -5,20 +5,20 @@ public sealed class HealthBarView : MonoBehaviour
 {
     [SerializeField] private Image fillImage;
 
-    public void SetNormalized(float normalized)
-    {
-     
-        fillImage.fillAmount = Mathf.Clamp01(normalized);
-    }
 
-    public void SetValues(float current, float max)
+    public void SetValues(int current, int max)
     {
-        if (max <= 0f)
+        if (max <= 0F)
         {
-            SetNormalized(0f);
+            SetNormalized(0F);
             return;
         }
 
-        SetNormalized(current / max);
+        SetNormalized((float)current / max);
+    }
+
+    private void SetNormalized(float normalized)
+    {
+        fillImage.fillAmount = Mathf.Clamp01(normalized);
     }
 }

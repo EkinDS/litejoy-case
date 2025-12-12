@@ -35,10 +35,8 @@ public sealed class UpgradePresenter : IDisposable
     {
         var keys = _upgradeManager.Keys;
 
-        for (int i = 0; i < keys.Count; i++)
+        foreach (var key in keys)
         {
-            var key = keys[i];
-
             int currentLevel = _upgradeManager.GetCurrentLevel(key);
             int nextCost = _upgradeManager.GetNextCost(key);
 
