@@ -15,6 +15,7 @@ namespace _Game.Features.Humans
         [SerializeField] private int baseMaxHealth = 10;
 
         private HumanModel _model;
+        private Tween _tween;
 
         public bool IsDead() => _model != null && _model.IsDead;
 
@@ -85,9 +86,9 @@ namespace _Game.Features.Humans
             Wallet.AddCoins(dmg);
             bossView.TakeDamage(dmg);
 
-            transform.DOScale(1.1f, 0.1f).OnComplete(() =>
+            _tween =  transform.DOScale(1.1f, 0.1f).OnComplete(() =>
             {
-                transform.DOScale(1f, 0.1f);
+                _tween =    transform.DOScale(1f, 0.1f);
             });
         }
 
@@ -110,6 +111,7 @@ namespace _Game.Features.Humans
 
         private void OnDestroy()
         {
+            _tween.Kill();
             if (_model != null)
             {
                 _model.Died -= OnDied;

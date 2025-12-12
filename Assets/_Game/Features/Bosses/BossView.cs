@@ -13,6 +13,7 @@ namespace _Game.Features.Bosses
         [SerializeField] private HealthBarView healthBarView;
 
         private readonly BossModel _model = new();
+        private Tween _tween;
 
         public bool IsAlive() => _model.IsAlive;
 
@@ -34,9 +35,9 @@ namespace _Game.Features.Bosses
 
             _model.AttackTick(Time.time);
 
-            transform.DOScale(1.1f, 0.1f).OnComplete(() =>
+            _tween =  transform.DOScale(1.1f, 0.1f).OnComplete(() =>
             {
-                transform.DOScale(1f, 0.1f);
+                _tween =    transform.DOScale(1f, 0.1f);
             });
         }
 
@@ -65,6 +66,7 @@ namespace _Game.Features.Bosses
 
         private void OnDestroy()
         {
+            _tween.Kill();
             _model.Defeated -= OnDefeated;
             _model.HealthChanged -= OnHealthChanged;
         }

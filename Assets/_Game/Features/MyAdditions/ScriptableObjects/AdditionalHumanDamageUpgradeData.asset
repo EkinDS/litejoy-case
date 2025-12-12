@@ -14,9 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   levels:
+  - cost: 10
+    value: 1
   - cost: 20
     value: 2
-  - cost: 25
-    value: 4
   - cost: 30
+    value: 3
+  - cost: 40
+    value: 4
+  - cost: 50
+    value: 5
+  - cost: 60
     value: 6
+  - cost: 70
+    value: 7
+  - cost: 80
+    value: 8
+  - cost: 90
+    value: 9
+  - cost: 100
+    value: 10
