@@ -10,78 +10,63 @@ namespace _Game.Features.Bosses
     {
         public Action<List<HumanView>> BossDefeatedCallback { get; set; }
 
-        private readonly List<HumanView> _attackers = new();
+        [SerializeField] private HealthBarView healthBarView;
 
-        public bool IsAlive() => _currentHp > 0;
+        private readonly BossModel _model = new();
 
-        private float _lastAttackTime;
-        private double _currentHp;
-        private float _attackInterval;
-        private int _targetsPerAttack;
-        private int _damage;
+        public bool IsAlive() => _model.IsAlive;
 
         public void Initialize(double hp, float attackInterval, int targetsPerAttack, double damage)
         {
-            _currentHp = hp;
-            _attackInterval = attackInterval;
-            _targetsPerAttack = targetsPerAttack;
-            _damage = (int)damage;
+            _model.Defeated -= OnDefeated;
+            _model.Defeated += OnDefeated;
+
+            _model.HealthChanged -= OnHealthChanged;
+            _model.HealthChanged += OnHealthChanged;
+
+            _model.Initialize(hp, attackInterval, targetsPerAttack, (int)damage);
         }
 
         private void Update()
         {
-            if (!IsAlive())
+            if (!_model.ShouldAttack(Time.time))
                 return;
 
-            AttackHumans();
-        }
+            _model.AttackTick(Time.time);
 
-        private void AttackHumans()
-        {
-            if (Time.time - _lastAttackTime >= _attackInterval && _attackers.Count > 0)
+            transform.DOScale(1.1f, 0.1f).OnComplete(() =>
             {
-                var defeatedHumans = new List<HumanView>();
-                for (var i = 0; i < Mathf.Min(_targetsPerAttack, _attackers.Count); i++)
-                {
-                    var target = _attackers[i];
-                    target.TakeDamage(_damage);
-                    
-                    transform.DOScale(1.1F, 0.1F).OnComplete((() =>
-                    {
-                        transform.DOScale(1F, 0.1F);
-                    }));
-                    if (target.IsDead())
-                    {
-                        defeatedHumans.Add(target);
-                    }
-                }
-
-                foreach (var defeatedHuman in defeatedHumans)
-                {
-                    _attackers.Remove(defeatedHuman);
-                }
-
-                _lastAttackTime = Time.time;
-            }
+                transform.DOScale(1f, 0.1f);
+            });
         }
 
         public void TakeDamage(double damage)
         {
-            _currentHp = Math.Max(0, _currentHp - damage);
-            if (!(_currentHp <= 0))
-                return;
-
-            Debug.Log("Boss Defeated!");
-            BossDefeatedCallback.Invoke(_attackers);
-            Destroy(gameObject);
+            _model.TakeDamage(damage);
         }
 
         public void RegisterAttacker(HumanView humanView)
         {
-            if (!_attackers.Contains(humanView))
-            {
-                _attackers.Add(humanView);
-            }
+            _model.RegisterAttacker(humanView);
+        }
+
+        private void OnHealthChanged(float current, float max)
+        {
+            if (healthBarView != null)
+                healthBarView.SetValues(current, max);
+        }
+
+        private void OnDefeated(List<HumanView> attackers)
+        {
+            Debug.Log("Boss Defeated!");
+            BossDefeatedCallback?.Invoke(attackers);
+            Destroy(gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            _model.Defeated -= OnDefeated;
+            _model.HealthChanged -= OnHealthChanged;
         }
     }
 }

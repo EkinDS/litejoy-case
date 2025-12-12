@@ -9,16 +9,24 @@ namespace _Game.Features.Humans
 {
     public class HumanView : MonoBehaviour
     {
-        private readonly CompositeDisposable _disposables = new();
+        private readonly CompositeDisposable _moveDisposables = new();
 
-        private int _health;
-        private int _damage;
+        [SerializeField] private HealthBarView healthBarView;
+        [SerializeField] private int baseMaxHealth = 10;
 
-        public bool IsDead() => _health <= 0;
+        private HumanModel _model;
+
+        public bool IsDead() => _model != null && _model.IsDead;
 
         public void Initialize(int count)
         {
             gameObject.name = $"Human_{count}";
+
+            _model = new HumanModel();
+            _model.Died += OnDied;
+            _model.HealthChanged += OnHealthChanged;
+
+            _model.Initialize(baseMaxHealth);
         }
 
         public void SetPosition(Vector3 position)
@@ -28,11 +36,13 @@ namespace _Game.Features.Humans
 
         public void MoveTo(Vector3 targetPosition, Action<HumanView> onReached)
         {
-            var speed = 5;
+            var speed = 5f;
             var startPosition = transform.position;
             var distance = Vector3.Distance(startPosition, targetPosition);
             var duration = distance / speed;
-            var elapsedTime = 0.0f;
+            var elapsedTime = 0f;
+
+            _moveDisposables.Clear();
 
             Observable.EveryUpdate()
                 .Subscribe(_ =>
@@ -40,51 +50,73 @@ namespace _Game.Features.Humans
                     elapsedTime += Time.deltaTime;
                     transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
 
-                    if (!(Vector3.Distance(transform.position, targetPosition) <= 0.1f))
+                    if (Vector3.Distance(transform.position, targetPosition) > 0.1f)
                         return;
 
                     onReached(this);
-                    _disposables.Clear();
+                    _moveDisposables.Clear();
                 })
-                .AddTo(_disposables);
+                .AddTo(_moveDisposables);
         }
 
         public void ApplyTrainingResult(int healthGain, int damageGain)
         {
-            _health += healthGain;
-            _damage += damageGain;
+            _model.ApplyTrainingResult(healthGain, damageGain);
         }
-
 
         public void StartAttacking(BossView bossView)
         {
-            Observable.Interval(TimeSpan.FromMilliseconds(1000))
+            Observable.Interval(TimeSpan.FromSeconds(1))
                 .Subscribe(_ => AttackBoss(bossView))
-                .AddTo(this) 
+                .AddTo(this)
                 .AddTo(bossView);
         }
 
         private void AttackBoss(BossView bossView)
         {
-            if (bossView.IsAlive())
+            if (_model == null) return;
+            if (bossView == null) return;
+
+            if (!_model.CanAttackBoss(bossView.IsAlive()))
+                return;
+
+            int dmg = _model.Damage;
+
+            Wallet.AddCoins(dmg);
+            bossView.TakeDamage(dmg);
+
+            transform.DOScale(1.1f, 0.1f).OnComplete(() =>
             {
-                Wallet.AddCoins(_damage);
-                bossView.TakeDamage(_damage);
-                transform.DOScale(1.1F, 0.1F).OnComplete((() =>
-                {
-                    transform.DOScale(1F, 0.1F);
-                }));
-            }
+                transform.DOScale(1f, 0.1f);
+            });
         }
 
         public void TakeDamage(int damage)
         {
-            _health -= damage;
-            if (IsDead())
+            _model.TakeDamage(damage);
+        }
+
+        private void OnHealthChanged(float current, float max)
+        {
+            if (healthBarView != null)
+                healthBarView.SetValues(current, max);
+        }
+
+        private void OnDied()
+        {
+            Debug.Log("Human Dead!");
+            Destroy(gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            if (_model != null)
             {
-                Debug.Log("Human Dead!");
-                Destroy(gameObject);
+                _model.Died -= OnDied;
+                _model.HealthChanged -= OnHealthChanged;
             }
+
+            _moveDisposables?.Dispose();
         }
     }
 }
