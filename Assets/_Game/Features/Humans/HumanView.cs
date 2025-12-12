@@ -48,11 +48,12 @@ namespace _Game.Features.Humans
                 .AddTo(_disposables);
         }
 
-        public void Train()
+        public void ApplyTrainingResult(int healthGain, int damageGain)
         {
-            _health += 10;
-            _damage += 10;
+            _health += healthGain;
+            _damage += damageGain;
         }
+
 
         public void StartAttacking(BossView bossView)
         {

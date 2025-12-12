@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using _Game.Features.Humans;
 using _Game.Features.HumansState.Scripts.Core;
-using _Game.Features.HumansState.Scripts.Training;
 using UniRx;
 using UnityEngine;
 using Random = UnityEngine.Random;

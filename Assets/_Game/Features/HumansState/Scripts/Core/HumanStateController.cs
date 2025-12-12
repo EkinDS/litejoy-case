@@ -4,7 +4,6 @@ using _Game.Features.Humans;
 using _Game.Features.HumansState.Scripts.Combat;
 using _Game.Features.HumansState.Scripts.Portal;
 using _Game.Features.HumansState.Scripts.Spawn;
-using _Game.Features.HumansState.Scripts.Training;
 using _Game.Features.HumansState.Scripts.Waiting;
 using UnityEngine;
 
@@ -16,7 +15,13 @@ namespace _Game.Features.HumansState.Scripts.Core
         [SerializeField] private HumanView _humanPrefab;
         [SerializeField] private BossView _bossPrefab;
 
+        private UpgradeManager _upgradeManager;
         private List<HumanState> _states;
+
+        public void Initialize(UpgradeManager upgradeManager)
+        {
+            _upgradeManager = upgradeManager;
+        }
 
         private void Start()
         {
@@ -25,7 +30,7 @@ namespace _Game.Features.HumansState.Scripts.Core
                 new SpawnState(this, _humanPrefab),
                 new PortalState(this),
                 new WaitingState(this),
-                new TrainingState(this, _trainStateView),
+                new TrainingState(this, _trainStateView, _upgradeManager),
                 new CombatState(this, _bossPrefab),
             };
 
@@ -34,23 +39,19 @@ namespace _Game.Features.HumansState.Scripts.Core
 
         public void TransitionTo<T>(HumanView humanView = null) where T : HumanState
         {
-            foreach (var state in _states)
+            for (int i = 0; i < _states.Count; i++)
             {
-                if (state.GetType() == typeof(T))
-                {
-                    state.OnEnter(humanView);
-                }
+                if (_states[i].GetType() == typeof(T))
+                    _states[i].OnEnter(humanView);
             }
         }
 
         public bool FreeSlotIn<T>() where T : HumanState
         {
-            foreach (var state in _states)
+            for (int i = 0; i < _states.Count; i++)
             {
-                if (state.GetType() == typeof(T))
-                {
-                    return state.HasFreeSlot();
-                }
+                if (_states[i].GetType() == typeof(T))
+                    return _states[i].HasFreeSlot();
             }
 
             return false;
