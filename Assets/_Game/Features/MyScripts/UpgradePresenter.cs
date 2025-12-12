@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using _Game.Features.PlayerWallet;
 
 public sealed class UpgradePresenter : IDisposable
 {
@@ -14,47 +14,45 @@ public sealed class UpgradePresenter : IDisposable
         _view.UpgradeClicked += OnUpgradeClicked;
         _view.Setup(_upgradeManager.Keys);
 
+        //Wallet.CoinsChanged += RefreshAll;
+
         RefreshAll();
     }
 
     public void Dispose()
     {
         _view.UpgradeClicked -= OnUpgradeClicked;
+        //Wallet.CoinsChanged -= RefreshAll;
     }
 
-    private void OnUpgradeClicked(UpgradeType type)
+    private void OnUpgradeClicked(UpgradeType key)
     {
-        if (_upgradeManager.TryUpgrade(type))
-            RefreshAll();
-        else
-            RefreshOne(type); // still update button interactable/cost if needed
+        _upgradeManager.TryUpgrade(key);
+        RefreshAll();
     }
 
     private void RefreshAll()
     {
-        IReadOnlyList<UpgradeType> keys = _upgradeManager.Keys;
+        var keys = _upgradeManager.Keys;
+
         for (int i = 0; i < keys.Count; i++)
-            RefreshOne(keys[i]);
-    }
+        {
+            var key = keys[i];
 
-    private void RefreshOne(UpgradeType type)
-    {
-        var currentLevel = _upgradeManager.GetCurrentLevel(type);
-        var nextCost = _upgradeManager.GetNextCost(type);
-        var currentValue = _upgradeManager.GetCurrentValue(type);
-        var nextValue = _upgradeManager.GetNextValue(type);
+            int currentLevel = _upgradeManager.GetCurrentLevel(key);
+            int nextCost = _upgradeManager.GetNextCost(key);
 
-        var model = new UpgradeModel(
-            type,
-            currentLevel,
-            nextCost < 0 ? currentLevel : currentLevel + 1,
-            currentValue,
-            nextValue,
-            nextCost,
-            _upgradeManager.CanUpgrade(type)
-        );
+            var model = new UpgradeViewModel(
+                key,
+                currentLevel,
+                nextCost < 0 ? currentLevel : currentLevel + 1,
+                _upgradeManager.GetCurrentValue(key),
+                _upgradeManager.GetNextValue(key),
+                nextCost,
+                _upgradeManager.CanUpgrade(key)
+            );
 
-        _view.Render(model);
-
+            _view.Render(model);
+        }
     }
 }

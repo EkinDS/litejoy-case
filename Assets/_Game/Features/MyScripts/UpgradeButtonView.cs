@@ -25,24 +25,23 @@ public class UpgradeButtonView : MonoBehaviour
         button.onClick.AddListener(() => Clicked?.Invoke(key));
     }
 
-    public void Render(UpgradeModel model)
+    public void Render(UpgradeViewModel viewModel)
     {
-        titleText.text = model.Type.ToString();
+        titleText.text = viewModel.Type.ToString();
 
-        if (model.NextCost < 0)
+        if (viewModel.NextCost < 0)
         {
-            levelText.text = $"Lv {model.CurrentLevel + 1}";
-            valueText.text = $"{model.CurrentValue}";
+            levelText.text = $"Lv {viewModel.CurrentLevel + 1}";
+            valueText.text = $"{viewModel.CurrentValue}";
             costText.text = "MAX";
             SetInteractable(false);
             return;
         }
 
-        levelText.text = $"Lv {model.CurrentLevel + 1}";
-        valueText.text = $"{model.CurrentValue} → {model.NextValue}";
-        costText.text = $"Cost: {model.NextCost}";
-
-        SetInteractable(model.CanUpgrade);
+        levelText.text = $"Lv {viewModel.CurrentLevel + 1}";
+        valueText.text = $"{viewModel.CurrentValue} → {viewModel.NextValue}";
+        costText.text = $"Cost: {viewModel.NextCost}";
+        SetInteractable(true);
     }
 
     public void SetVisible(bool visible)

@@ -55,11 +55,11 @@ public class UpgradeView : MonoBehaviour
         }
     }
 
-    public void Render(UpgradeModel model)
+    public void Render(UpgradeViewModel viewModel)
     {
-        var btn = FindButton(model.Type);
+        var btn = FindButton(viewModel.Type);
 
-        btn.Render(model);
+        btn.Render(viewModel);
     }
 
     private void OnButtonClicked(UpgradeType key)

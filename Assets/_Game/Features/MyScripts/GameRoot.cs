@@ -8,13 +8,21 @@ public class GameRoot : MonoBehaviour
     [SerializeField] private HumanStateController humanStateController;
     [SerializeField] private UpgradeView upgradeView;
 
+    private UpgradeModel _upgradeModel;
     private UpgradeManager _upgradeManager;
     private UpgradePresenter _upgradePresenter;
 
     private void Awake()
     {
-        _upgradeManager = new UpgradeManager(upgradeData);
+        InitializeUpgradeFeature();
+
         humanStateController.Initialize(_upgradeManager);
+    }
+
+    private void InitializeUpgradeFeature()
+    {
+        _upgradeModel = new UpgradeModel(upgradeData);
+        _upgradeManager = new UpgradeManager(_upgradeModel);
         _upgradePresenter = new UpgradePresenter(_upgradeManager, upgradeView);
     }
 
