@@ -13,41 +13,35 @@ public class UpgradeButtonView : MonoBehaviour
 
 
     public event Action<UpgradeType> Clicked;
-   public UpgradeType key;
-    
+    public UpgradeType key;
+
     private void Awake()
     {
         Initialize();
     }
-    
-    public void Initialize()
+
+    private void Initialize()
     {
-        if (button != null)
-        {
-            button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(() => Clicked?.Invoke(key));
-        }
+        button.onClick.AddListener(() => Clicked?.Invoke(key));
     }
 
     public void Render(UpgradeModel model)
     {
-        if (titleText != null)
-            titleText.text = model.Type.ToString();
+        titleText.text = model.Type.ToString();
 
         if (model.NextCost < 0)
         {
-            if (levelText != null) levelText.text = $"Lv {model.CurrentLevel + 1}";
-            if (valueText != null) valueText.text = $"{model.CurrentValue}";
-            if (costText != null) costText.text = "MAX";
+            levelText.text = $"Lv {model.CurrentLevel + 1}";
+            valueText.text = $"{model.CurrentValue}";
+            costText.text = "MAX";
             SetInteractable(false);
             return;
         }
 
-        if (levelText != null) levelText.text = $"Lv {model.CurrentLevel + 1}";
-        if (valueText != null) valueText.text = $"{model.CurrentValue} → {model.NextValue}";
-        if (costText != null) costText.text = $"Cost: {model.NextCost}";
+        levelText.text = $"Lv {model.CurrentLevel + 1}";
+        valueText.text = $"{model.CurrentValue} → {model.NextValue}";
+        costText.text = $"Cost: {model.NextCost}";
 
-        // If you want affordability gating, use model.CanUpgrade here
         SetInteractable(model.CanUpgrade);
     }
 
@@ -58,6 +52,6 @@ public class UpgradeButtonView : MonoBehaviour
 
     private void SetInteractable(bool interactable)
     {
-        if (button != null) button.interactable = interactable;
+        button.interactable = interactable;
     }
 }

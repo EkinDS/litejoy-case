@@ -31,16 +31,10 @@ public sealed class UpgradeManager
         
     }
 
-    public bool HasUpgrade(UpgradeType key) => _dataByKey.ContainsKey(key);
 
     public int GetCurrentLevel(UpgradeType key)
     {
         return _levelByKey.TryGetValue(key, out var lvl) ? lvl : 0;
-    }
-
-    public int GetMaxLevel(UpgradeType key)
-    {
-        return _dataByKey.TryGetValue(key, out var data) ? data.MaxLevel : 0;
     }
 
     public float GetCurrentValue(UpgradeType key)
