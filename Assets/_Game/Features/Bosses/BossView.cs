@@ -35,10 +35,7 @@ namespace _Game.Features.Bosses
 
             _model.AttackTick(Time.time);
 
-            _tween =  transform.DOScale(1.1f, 0.1f).OnComplete(() =>
-            {
-                _tween =    transform.DOScale(1f, 0.1f);
-            });
+            _tween = transform.DOScale(1.1f, 0.1f).OnComplete(() => { _tween = transform.DOScale(1f, 0.1f); });
         }
 
         public void TakeDamage(int damage)
