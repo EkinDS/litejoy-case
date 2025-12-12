@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c66541b50d467034ea769f0ea9cdf46e, type: 3}
   m_Name: LessTrainingTimeUpgadeData
   m_EditorClassIdentifier: 
-  type: 0
+  type: 2
   levels:
   - cost: 1
-    value: 0.75
+    value: 0.2
   - cost: 2
-    value: 0.5
+    value: 0.4
   - cost: 3
-    value: 0.25
+    value: 0.6

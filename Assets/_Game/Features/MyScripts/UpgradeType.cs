@@ -1,6 +1,6 @@
 public enum UpgradeType
 {
-    AdditionalHumanHealth,
-    AdditionalHumanDamage,
-    LessHumanTrainingTime,
+    BonusHealth,
+    BonusDamage,
+    FasterTrainingSpeed,
 }

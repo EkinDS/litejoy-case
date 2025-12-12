@@ -79,7 +79,7 @@ public sealed class UpgradeManager
     public bool CanUpgrade(UpgradeType key)
     {
         var cost = GetNextCost(key);
-        return cost >= 0 && Wallet.GetCoins() >= cost;
+        return cost >= 0 /*&& Wallet.GetCoins() >= cost*/;
     }
 
     public bool TryUpgrade(UpgradeType key)

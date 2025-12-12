@@ -6,7 +6,7 @@ public class GameRoot : MonoBehaviour
 {
     [SerializeField] private List<UpgradeDataSO> upgradeData;
     [SerializeField] private HumanStateController humanStateController;
-    [SerializeField] private UpgradePopupView upgradePopupView;
+    [SerializeField] private UpgradeView upgradeView;
 
     private UpgradeManager _upgradeManager;
     private UpgradePresenter _upgradePresenter;
@@ -14,10 +14,8 @@ public class GameRoot : MonoBehaviour
     private void Awake()
     {
         _upgradeManager = new UpgradeManager(upgradeData);
-
         humanStateController.Initialize(_upgradeManager);
-
-        _upgradePresenter = new UpgradePresenter(_upgradeManager, upgradePopupView);
+        _upgradePresenter = new UpgradePresenter(_upgradeManager, upgradeView);
     }
 
     private void OnDestroy()
