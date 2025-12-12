@@ -1,6 +1,7 @@
 using System;
 using _Game.Features.Bosses;
 using _Game.Features.PlayerWallet;
+using DG.Tweening;
 using UniRx;
 using UnityEngine;
 
@@ -59,8 +60,8 @@ namespace _Game.Features.Humans
         {
             Observable.Interval(TimeSpan.FromMilliseconds(1000))
                 .Subscribe(_ => AttackBoss(bossView))
-                .AddTo(this) //Stop attacking if human dead
-                .AddTo(bossView); //Stop attacking if boss dead
+                .AddTo(this) 
+                .AddTo(bossView);
         }
 
         private void AttackBoss(BossView bossView)
@@ -69,6 +70,10 @@ namespace _Game.Features.Humans
             {
                 Wallet.AddCoins(_damage);
                 bossView.TakeDamage(_damage);
+                transform.DOScale(1.1F, 0.1F).OnComplete((() =>
+                {
+                    transform.DOScale(1F, 0.1F);
+                }));
             }
         }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using _Game.Features.Humans;
+using DG.Tweening;
 using UnityEngine;
 
 namespace _Game.Features.Bosses
@@ -44,6 +45,11 @@ namespace _Game.Features.Bosses
                 {
                     var target = _attackers[i];
                     target.TakeDamage(_damage);
+                    
+                    transform.DOScale(1.1F, 0.1F).OnComplete((() =>
+                    {
+                        transform.DOScale(1F, 0.1F);
+                    }));
                     if (target.IsDead())
                     {
                         defeatedHumans.Add(target);
